@@ -1,0 +1,9 @@
+# dirs
+gcp/
+.terraform/
+.gcloud.json
+
+# files
+*.todo
+.todo
+plan
