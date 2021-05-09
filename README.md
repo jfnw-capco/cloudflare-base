@@ -174,7 +174,7 @@ circleci local execute \
   -e BACKEND_BUCKET=${BACKEND_BUCKET}  \
   -e GOOGLE_CREDENTIALS="$(cat ./.gcloud.json)" \
   -e CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN} \
-  --job apply
+  --job dev
 ```
 
 <!-- ROADMAP -->

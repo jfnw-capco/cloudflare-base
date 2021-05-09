@@ -38,6 +38,10 @@ workflows:
   commit:
     jobs:
       - apply:
+          name: dev
           domain: delineate.dev
       - apply:
+          name: io
           domain: delineate.io
+          requires:
+            - dev
