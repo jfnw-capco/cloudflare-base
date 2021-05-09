@@ -1,7 +1,9 @@
 domain                    = "delineate.dev"
+plan                      = "free"
 rate_limit_threshold      = 500
 rate_limit_period         = 60
 rate_limit_action_mode    = "ban"
 rate_limit_action_timeout = 60
 rate_limit_disabled       = false
-enable_dnssec             = true
+enable_smart_routing      = false
+enable_dnssec             = false

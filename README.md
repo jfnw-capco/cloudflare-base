@@ -126,8 +126,10 @@ pip install -r requirements.txt
 pre-commit install
 
 # set the required provider env variables
-export GOOGLE_APPLICATION_CREDENTIALS= # path to credentials file
-export CLOUDFLARE_API_TOKEN= # cloudflare token
+export DOMAIN= # domain name
+export CLOUDFLARE_API_TOKEN= # cloudflare token for the domain
+export GOOGLE_APPLICATION_CREDENTIALS= # path to credentials GCP file
+export BACKEND_BUCKET= #
 ```
 
 <!-- USAGE EXAMPLES -->
@@ -136,10 +138,8 @@ export CLOUDFLARE_API_TOKEN= # cloudflare token
 After changing int the `./ops` directory the following commands can be used used
 
 ```shell
-DOMAIN=delineate.io
-
 terraform init \
-  -backend-config="bucket=io-delineate-terraform" \
+  -backend-config="bucket=${BACKEND_BUCKET}" \
   -backend-config="prefix=cloudflare/${DOMAIN}" ./ops
 
 # plan changes - vars file
@@ -153,6 +153,18 @@ terraform destroy -var-file="./ops/config/${DOMAIN}.tfvars" -auto-approve ./ops
 ```
 
 _For more examples, please refer to the [Documentation](https://example.com)_
+
+## CircleCI Testing
+
+CircleCI Jobs can be tested locally before they are pushed centrally
+
+```shell
+circleci local execute \
+  -e BACKEND_BUCKET=io-delineate-terraform \
+  -e GOOGLE_CREDENTIALS="$(cat ./.gcloud.json)" \
+  -e CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN} \
+  --job apply
+```
 
 <!-- ROADMAP -->
 ## Roadmap

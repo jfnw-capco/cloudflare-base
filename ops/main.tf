@@ -16,3 +16,7 @@ data "cloudflare_zones" "current" {
     name = var.domain
   }
 }
+
+output "zone" {
+  value = data.cloudflare_zones.current.zones[0]
+}

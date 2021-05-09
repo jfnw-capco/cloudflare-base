@@ -3,6 +3,11 @@ variable "domain" {
   type        = string
 }
 
+variable "plan" {
+  description = "Indicates if pro features are available"
+  type        = string
+}
+
 variable "rate_limit_threshold" {
   description = "The threshold in seconds for the overarching rate limit"
   type        = number
@@ -26,6 +31,11 @@ variable "rate_limit_action_timeout" {
 
 variable "rate_limit_disabled" {
   description = "Indicates if the overarching rate limit is disabled"
+  type        = bool
+}
+
+variable "enable_smart_routing" {
+  description = "Indicates if smart routing is enabled"
   type        = bool
 }
 

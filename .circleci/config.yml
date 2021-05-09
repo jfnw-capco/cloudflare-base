@@ -5,11 +5,15 @@ parameters:
     type: string
     default: "hashicorp/terraform:0.14.8"
 
-commands:
-  terraform:
+jobs:
+  apply:
+    docker:
+      - image: << pipeline.parameters.terraform-image >>
     parameters:
       domain:
         type: string
+    environment:
+      GOOGLE_CLOUD_KEYFILE_JSON: /tmp/.gcloud.json
     steps:
       - checkout
       - run:
@@ -18,32 +22,22 @@ commands:
       - run:
           name: terraform init
           command: terraform init
-                      -backend-config="bucket=${BACKEND_BUCKET}"
-                      -backend-config="prefix=cloudflare/<< parameters.domain >>" ./ops
+                    -backend-config="bucket=${BACKEND_BUCKET}"
+                    -backend-config="prefix=cloudflare/<< parameters.domain >>" ./ops
       - run:
           name: terraform validate
           command: terraform validate ./ops
       - run:
-          name: terraform plan
-          command: terraform plan -var-file="./ops/config/<< parameters.domain >>.tfvars" -out=plan ./ops
+           name: terraform plan
+           command: terraform plan -var-file="./ops/config/<< parameters.domain >>.tfvars" -out=plan ./ops
       - run:
-          name: terraform apply
-          command: terraform apply -auto-approve plan
-
-jobs:
-  io:
-    docker:
-      - image: << pipeline.parameters.terraform-image >>
-    steps:
-      - terraform:
-          domain: delineate.io
+           name: terraform apply
+           command: terraform apply -auto-approve plan
 
 workflows:
   commit:
     jobs:
-      - io
-
-# GOOGLE_CREDENTIALS=
-# GOOGLE_CLOUD_KEYFILE_JSON=
-# BACKEND_BUCKET=
-# CLOUDFLARE_API_TOKEN=
+      - apply:
+          domain: delineate.dev
+      - apply:
+          domain: delineate.io
