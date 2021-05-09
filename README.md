@@ -73,9 +73,12 @@ This project enables consistent, repeatable and controlled management of the sec
 
 A Cloudflare token must be granted the following permissions:
 
+* Account:Account Filter Lists:Edit
+* Account:Account Firewall Access Rules:Edit
 * Account:Billing:Edit
 * Zone:DNS:Read
 * Zone:Firewall Services:Edit
+* Zone:Page Rules:Edit
 * Zone:Zone Settings:Edit
 * Zone:Zone:Edit
 
@@ -110,6 +113,8 @@ brew install tfscan
 <!-- GETTING STARTED -->
 ### Getting Started
 
+#### Install Dependencies
+
 To get a local copy up and running follow these simple steps.
 
 ```shell
@@ -124,7 +129,13 @@ pip install -r requirements.txt
 
 # install pre-commit hooks
 pre-commit install
+```
 
+#### Environment Variables
+
+In addition there are a number of environment variables that need to be set:
+
+```shell
 # set the required provider env variables
 export DOMAIN= # domain name
 export CLOUDFLARE_API_TOKEN= # cloudflare token for the domain
@@ -135,7 +146,7 @@ export BACKEND_BUCKET= #
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-After changing int the `./ops` directory the following commands can be used used
+After changing int the `./ops` directory the following commands can be used.
 
 ```shell
 terraform init \
@@ -160,7 +171,7 @@ CircleCI Jobs can be tested locally before they are pushed centrally
 
 ```shell
 circleci local execute \
-  -e BACKEND_BUCKET=io-delineate-terraform \
+  -e BACKEND_BUCKET=${BACKEND_BUCKET}  \
   -e GOOGLE_CREDENTIALS="$(cat ./.gcloud.json)" \
   -e CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN} \
   --job apply
