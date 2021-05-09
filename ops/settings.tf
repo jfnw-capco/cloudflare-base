@@ -2,6 +2,7 @@ resource "cloudflare_zone_settings_override" "settings" {
   zone_id = data.cloudflare_zones.current.zones[0].id
   settings {
     always_online            = "on"
+    always_use_https         = "on"
     automatic_https_rewrites = "on"
     brotli                   = "on"
     browser_check            = "on"

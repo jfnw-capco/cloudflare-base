@@ -1,5 +1,6 @@
 # dirs
 gcp/
+.env
 .terraform/
 .gcloud.json
 
