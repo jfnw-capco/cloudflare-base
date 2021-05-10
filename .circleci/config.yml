@@ -10,7 +10,7 @@ jobs:
     docker:
       - image: << pipeline.parameters.terraform-image >>
     parameters:
-      domain:
+      extension:
         type: string
     environment:
       GOOGLE_CLOUD_KEYFILE_JSON: /tmp/.gcloud.json
@@ -23,13 +23,13 @@ jobs:
           name: terraform init
           command: terraform init
                     -backend-config="bucket=${BACKEND_BUCKET}"
-                    -backend-config="prefix=cloudflare/<< parameters.domain >>" ./ops
+                    -backend-config="prefix=cloudflare/${BASENAME}.<< parameters.extension >>" ./ops
       - run:
           name: terraform validate
           command: terraform validate ./ops
       - run:
            name: terraform plan
-           command: terraform plan -var-file="./ops/config/<< parameters.domain >>.tfvars" -out=plan ./ops
+           command: terraform plan -var-file="./ops/config/${BASENAME}.<< parameters.extension >>.tfvars" -out=plan ./ops
       - run:
            name: terraform apply
            command: terraform apply -auto-approve plan
@@ -38,10 +38,10 @@ workflows:
   commit:
     jobs:
       - apply:
-          name: dev
-          domain: delineate.dev
+          name: dev-domain
+          extension: dev
       - apply:
-          name: io
-          domain: delineate.io
+          name: io-domain
+          extension: io
           requires:
-            - dev
+            - dev-domain

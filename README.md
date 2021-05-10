@@ -14,7 +14,7 @@
   <h3 align="center">Platform Cloudflare</h3>
 
   <p align="center">
-    Automated configuration of a domain managed by Cloudflare with a baseline security and performance best practices configuration
+    Baseline configuration of a Cloudflare domain security and performance settings
     <br />
     <a href="https://github.com/delineateio/platform-cloudflare"><strong>Explore the docs »</strong></a>
     <br />
@@ -51,12 +51,15 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This project enables consistent, repeatable and controlled management of the security and performance configuration for domains that are managed in Cloudflare.  These configurations include but are not limited to the following:
+This project enables consistent, repeatable and version controlled management of the security and performance configuration for domains that are managed in Cloudflare.
+
+These configurations include but are not limited to the following:
 
 * Enable all traffic to use HTTPS using TLS 1.3 and origin pulls
 * Enable restrictions on sources of traffic to a specific IP and countries
 * Enable WAF and configure the WAF rule sets (e.g. OWASP groups)
 * Enable a sensible rate limiting threshold by source IP address
+* Creation of the DNSSec details for the domain
 * Enable a number of Cloudflare performance options (e.g. Argo, Brotli, Mirage)
 
 ### Built With
@@ -84,17 +87,15 @@ A Cloudflare token must be granted the following permissions:
 
 ##### GCS & GCP Service Account
 
-The configuration uses a [gcs backend](https://www.terraform.io/docs/language/settings/backends/gcs.html), therefore it is necessary for a `gcs` bucket to be available for stporing the remote `terraform` state.
+The configuration uses a [gcs backend](https://www.terraform.io/docs/language/settings/backends/gcs.html), therefore it is necessary for a `gcs` bucket to be available for storing the remote `terraform` state.
 
-In addition a GCP service account is required with the following roles assigned:
+In addition a GCP service account is required with the following role assigned:
 
 * Storage Objects Admin
 
 #### Local Prerequisites
 
-The following are recommendations only and `pyenv` and `tfenv` are not required.
-
-The `python` virtual environment can be created by any alternative and `terraform` could be installed directly with the versions shown below.
+The following are recommendations only and `pyenv` and `tfenv` are not strictly required.  The `python` virtual environment can be created by any alternative and `terraform` could be installed directly with the versions shown below.
 
 ```shell
 # pyenv or an alternative
@@ -103,8 +104,8 @@ pyenv install 3.9.1
 
 # tfenv or alternative
 brew install tfenv
-tfenv install 0.15.3
-tfenv use 0.15.3
+tfenv install 0.14.8
+tfenv use 0.14.8
 
 # tfscan is used in git hooks
 brew install tfscan
@@ -115,11 +116,11 @@ brew install tfscan
 
 #### Install Dependencies
 
-To get a local copy up and running follow these simple steps.
+To get a local copy up and running follow these simple steps
 
 ```shell
 # create a venv
-pyenv virtualenv 3.9.1 .venv-platform-cloudflare-3.9.1
+pyenv virtualenv 3.9.1 .venv-platform-cloudflare
 
 # upgrade pip
 python -m pip install --upgrade pip
@@ -133,14 +134,14 @@ pre-commit install
 
 #### Environment Variables
 
-In addition there are a number of environment variables that need to be set:
+In addition there are a number of environment variables that need to be set locally and in the `circleci` workflow.
 
 ```shell
 # set the required provider env variables
 export DOMAIN= # domain name
-export CLOUDFLARE_API_TOKEN= # cloudflare token for the domain
-export GOOGLE_APPLICATION_CREDENTIALS= # path to credentials GCP file
 export BACKEND_BUCKET= #
+export GOOGLE_APPLICATION_CREDENTIALS= # path to credentials GCP file
+export CLOUDFLARE_API_TOKEN= # cloudflare token for the domain
 ```
 
 <!-- USAGE EXAMPLES -->
@@ -167,10 +168,11 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## CircleCI Testing
 
-CircleCI Jobs can be tested locally before they are pushed centrally
+CircleCI Jobs can be tested locally before they are pushed centrally bu using the `circleci` CLI.
 
 ```shell
 circleci local execute \
+  -e BASENAME=${BASENAME} \
   -e BACKEND_BUCKET=${BACKEND_BUCKET}  \
   -e GOOGLE_CREDENTIALS="$(cat ./.gcloud.json)" \
   -e CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN} \
