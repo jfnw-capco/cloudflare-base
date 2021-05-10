@@ -174,7 +174,7 @@ CircleCI Jobs can be tested locally before they are pushed centrally bu using th
 circleci local execute \
   -e BASENAME=${BASENAME} \
   -e BACKEND_BUCKET=${BACKEND_BUCKET}  \
-  -e GOOGLE_CREDENTIALS="$(cat ./.gcloud.json)" \
+  -e GOOGLE_BACKEND_CREDENTIALS="$(cat ./.backend.json)" \
   -e CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN} \
   --job dev
 ```
